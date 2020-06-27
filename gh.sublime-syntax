@@ -1,0 +1,133 @@
+%YAML 1.2
+# [PackageDev] target_format: plist, ext: tmLanguage
+---
+# See http://www.sublimetext.com/docs/3/syntax.html
+name: Grey Hack Script
+file_extensions:
+  - src
+scope: source.ghs
+
+contexts:
+  # The prototype context is prepended to all contexts but those setting
+  # meta_include_prototype: false.
+  prototype:
+    - include: comments
+
+  main:
+    # The main context is the initial starting point of our syntax.
+    # Include other contexts from here (or specify them directly).
+    - include: keywords
+    - include: numbers
+    - include: strings
+    - include: general
+    - include: computer
+    - include: crypto
+    - include: file
+    - include: metalib
+    - include: metaxplot
+    - include: net_session
+    - include: port
+    - include: router
+    - include: shell
+    - include: base_numeric
+    - include: base_numeric_special
+    - include: base_strings
+    - include: base_list_map_func
+    - include: list_specific
+
+  keywords:
+    # Keywords are if, else for and while.
+    # Note that blackslashes don't need to be escaped within single quoted
+    # strings in YAML. When using single quoted strings, only single quotes
+    # need to be escaped: this is done by using two single quotes next to each
+    # other.
+    - match: '\b(if|then|else|for|while|end|new|return|function|break|continue)\b'
+      scope: keyword.control.ghs
+    - match: '\b(and|or|not)\b'
+      scope: keyword.operator.ghs
+    - match: '\bnull\b'
+      scope: constant.language.ghs
+    - match: '\b(self)[.]\w+\b'
+      captures:
+        1: variable.language.ghs
+
+  numbers:
+    - match: '\b(-)?[0-9]+\b'
+      scope: constant.numeric.ghs
+
+  strings:
+    # Strings begin and end with quotes, and use backslashes as an escape
+    # character.
+    - match: '"'
+      scope: punctuation.definition.string.begin.ghs
+      push: inside_string
+
+  inside_string:
+    - meta_include_prototype: false
+    - meta_scope: string.quoted.double.ghs
+    - match: '\\.'
+      scope: constant.character.escape.ghs
+    - match: '"'
+      scope: punctuation.definition.string.end.ghs
+      pop: true
+  comments:
+    # Comments begin with a '//' and finish at the end of the line.
+    - match: '//'
+      scope: punctuation.definition.comment.ghs
+      push:
+        # This is an anonymous context push for brevity.
+        - meta_scope: comment.line.double-slash.ghs
+        - match: $\n?
+          pop: true
+  general:
+    - match: '\b(print|active_user|command_info|current_date|exit|format_columns|get_router|get_shell|home_dir|include_lib|is_lan_ip|is_valid_ip|nslookup|parent_path|program_path|typeof|user_bank_number|user_input|user_mail_address)\b'
+      scope: support.function.ghs
+  computer:
+    - match: '[.](change_password|close_program|connect_wifi|create_folder|create_group|create_user|current_path|delete_group|delete_user|File|get_ports|groups|is_network_active|lan_ip|network_devices|show_procs|touch|wifi_networks)\b'
+      scope: support.function.ghs
+  crypto:
+    - match: '[.](aircrack|airmon|decipher|smtp_user_list)\b'
+      scope: support.function.ghs
+  file:
+    - match: '[.](chmod|content|copy|delete|get_files|get_folders|group|has_permission|is_binary|move|name|owner|parent|path|permissions|rename|set_content|set_group|size)\b'
+      scope: support.function.ghs
+  metalib:
+    - match: '[.](lib_name|overflow|version)\b'
+      scope: support.function.ghs
+  metaxplot:
+    - match: '[.](load|net_use|scan_address|scan)\b'
+      scope: support.function.ghs
+  net_session:
+    - match: '[.](dump_lib)\b'
+      scope: support.function.ghs
+  port:
+    - match: '[.](get_lan_ip|is_closed|port_number)\b'
+      scope:  support.function.ghs
+  router:
+    - match: '[.](bssid_name|computer_ports|computers_lan_ip|essid_name|local_ip|ping_port|port_info|public_ip|used_ports)\b'
+      scope: support.function.ghs
+  shell:
+    - match: '[.](build|connect_service|host_computer|launch|put|scp_upload|start_terminal)\b'
+      scope:  support.function.ghs
+  base_numeric:
+    - match: '\b(abs|acos|asin|atan|cos|pi|round|rnd|sign|sin|sqrt|str|tan|char|floor)[(]\b'
+      captures:
+        1: support.function.ghs
+  base_numeric_special:
+    - match: '\b(rnd|pi)\b'
+      scope: support.function.ghs
+  base_strings:
+    - match: '[.](hasIndex|indexOf|len|val|remove|lower|code|upper|lastIndexOf|trim|replace|split)[(]'
+      scope: support.function.ghs
+  base_list_map_func:
+    - match: '[.](push)[(]'
+      scope: support.function.ghs
+    - match: '[.](pull|indexes|values|sum|pop|shuffle|key|value)\b'
+      scope: support.function.ghs
+    - match: '\b(range|slice)[(]'
+      scope: support.function.ghs
+  list_specific:
+    - match: '[.](join)[(]'
+      scope: support.function.ghs
+    - match: '[.](reverse)\b'
+      scope: support.function.ghs

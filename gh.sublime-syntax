@@ -7,6 +7,9 @@ file_extensions:
   - src
 scope: source.ghs
 
+variables:
+  var: '[A-Za-z_][A-Za-z0-9_]+'
+
 contexts:
   # The prototype context is prepended to all contexts but those setting
   # meta_include_prototype: false.
@@ -34,6 +37,7 @@ contexts:
     - include: base_strings
     - include: base_list_map_func
     - include: list_specific
+    - include: functions
 
   keywords:
     # Keywords are if, else for and while.
@@ -41,7 +45,7 @@ contexts:
     # strings in YAML. When using single quoted strings, only single quotes
     # need to be escaped: this is done by using two single quotes next to each
     # other.
-    - match: '\b(if|then|else|for|while|end|new|return|function|break|continue)\b'
+    - match: '\b(if|then|else|for|in|while|end\s+if|end\s+for|end\s+function|new|return|break|continue)\b'
       scope: keyword.control.ghs
     - match: '\b(and|or|not)\b'
       scope: keyword.operator.ghs
@@ -131,3 +135,9 @@ contexts:
       scope: support.function.ghs
     - match: '[.](reverse)\b'
       scope: support.function.ghs
+  functions:
+    - match: '\b({{var}})\s+=\s+(function)\('
+      scope: meta.function.ghs
+      captures:
+        1: entity.name.function.ghs
+        2: storage.type.function.ghs

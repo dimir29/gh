@@ -71,7 +71,7 @@ contexts:
   inside_string:
     - meta_include_prototype: false
     - meta_scope: string.quoted.double.ghs
-    - match: '\\.'
+    - match: '""'
       scope: constant.character.escape.ghs
     - match: '"'
       scope: punctuation.definition.string.end.ghs
